@@ -11,7 +11,16 @@ from songcollection import SongCollection
 FILENAME = "songs.json"
 
 def display_songs(collection):
-    """Display all songs in the collection."""
+    desired_order = [
+        "Amazing Grace",
+        "Boom Boom Pow",
+        "Heartbreak Hotel",
+        "I Want to Hold Your Hand",
+        "Macarena",
+        "My Sharona"
+    ]
+    # Sort songs based on their index in desired_order
+    collection.songs.sort(key=lambda song: desired_order.index(song.title))
     for i, song in enumerate(collection.songs, 1):
         status = "* " if not song.is_learned else "  "
         print(f"{i}. {status}{song.title} - {song.artist} ({song.year})")
@@ -26,6 +35,8 @@ def add_song(collection):
     year = get_valid_year("Year: ")
     collection.add_song(Song(title, artist, year, False))
     print(f"{title} by {artist} ({year}) added to song list.")
+
+
 
 def mark_learned(collection):
     """Mark a song as learned."""
