@@ -1,130 +1,93 @@
-"""..."""
-
-# Use SongCollection class if you want to
-
 """
 Name: Lin Han-Wei
 Date started: 2/28-3/10
 GitHub URL: https://github.com/Vince-1206
 """
 
-import csv
+"""Song List 1.0 updated with classes - by Lin Han-Wei"""
+from song import Song
+from songcollection import SongCollection
 
-FILENAME = "songs.csv"
+FILENAME = "songs.json"
 
+def display_songs(collection):
+    """Display all songs in the collection."""
+    for i, song in enumerate(collection.songs, 1):
+        status = "* " if not song.is_learned else "  "
+        print(f"{i}. {status}{song.title} - {song.artist} ({song.year})")
+    print(f"{collection.get_number_of_learned_songs()} songs learned, "
+          f"{collection.get_number_of_unlearned_songs()} songs to learn.")
 
-def load_songs():
-    """Load songs from the CSV file into a list."""
-    songs = []
-    try:
-        with open(FILENAME, "r") as file:
-            reader = csv.reader(file)
-            for row in reader:
-                row[2] = int(row[2])  # Convert year to integer
-                songs.append(row)
-    except FileNotFoundError:
-        print("File not found. Starting with an empty song list.")
-    return songs
-
-
-def save_songs(songs):
-    """Save the current song list back to the CSV file in sorted order."""
-    songs.sort(key=lambda s: (s[2], s[0]))  # Sort before saving
-    with open(FILENAME, "w", newline='') as file:
-        writer = csv.writer(file)
-        writer.writerows(songs)
-    print(f"{len(songs)} songs saved to {FILENAME}")
-
-
-def display_songs(songs):
-    """Display the song list, sorted by year and title with proper formatting."""
-    songs.sort(key=lambda s: (s[2], s[0]))  # Sort by year, then title
-    learned_count = sum(1 for song in songs if song[3] == 'l')
-
-    for i, song in enumerate(songs, 1):
-        status = "* " if song[3] == 'u' else "  "
-        print(f"{i}. {status}{song[0]} - {song[1]} ({song[2]})")
-
-    print(f"{learned_count} songs learned, {len(songs) - learned_count} songs still to learn.")
-
-
-def add_song(songs):
-    """Add a new song to the list after validating input."""
+def add_song(collection):
+    """Add a new song to the collection."""
     print("Enter details for a new song.")
     title = get_valid_string("Title: ")
     artist = get_valid_string("Artist: ")
     year = get_valid_year("Year: ")
-    songs.append([title, artist, year, 'u'])  # New songs are unlearned
+    collection.add_song(Song(title, artist, year, False))
     print(f"{title} by {artist} ({year}) added to song list.")
 
-
-def mark_learned(songs):
+def mark_learned(collection):
     """Mark a song as learned."""
-    unlearned_songs = [song for song in songs if song[3] == 'u']
-    if not unlearned_songs:
+    if collection.get_number_of_unlearned_songs() == 0:
         print("No more songs to learn!")
         return
-
-    display_songs(songs)
+    display_songs(collection)
     while True:
         try:
             song_number = int(input("Enter the number of a song to mark as learned: "))
-            if song_number <= 0:
-                print("Number must be > 0.")
-            elif song_number > len(songs):
+            if song_number <= 0 or song_number > len(collection.songs):
                 print("Invalid song number")
-            elif songs[song_number - 1][3] == 'l':
-                print(f"You have already learned {songs[song_number - 1][0]}")
-                return
+            elif collection.songs[song_number - 1].is_learned:
+                print(f"You have already learned {collection.songs[song_number - 1].title}")
             else:
-                songs[song_number - 1][3] = 'l'
-                print(f"{songs[song_number - 1][0]} by {songs[song_number - 1][1]} learned!")
-                return
+                collection.songs[song_number - 1].mark_learned()
+                print(f"{collection.songs[song_number - 1].title} learned!")
+                break
         except ValueError:
             print("Invalid input; enter a valid number.")
 
-
 def get_valid_string(prompt):
-    """Get a non-empty string input from the user."""
+    """Get a non-empty string input."""
     while True:
         value = input(prompt).strip()
         if value:
             return value
-        print("Input can not be blank.")
-
+        print("Input cannot be blank.")
 
 def get_valid_year(prompt):
-    """Get a valid positive integer for the year."""
+    """Get a valid positive year."""
     while True:
         try:
             year = int(input(prompt))
             if year > 0:
                 return year
-            print("Number must be > 0.")
+            print("Year must be > 0.")
         except ValueError:
             print("Invalid input; enter a valid number.")
 
-
 def main():
-    """Main function to run the program."""
+    """Main program loop."""
     print("Song List 1.0 - by Lindsay Ward")
-    songs = load_songs()
-    print(f"{len(songs)} songs loaded.")
+    collection = SongCollection()
+    collection.load_songs(FILENAME)
+    print(f"{len(collection.songs)} songs loaded.")
 
     while True:
         print("\nMenu:\nD - Display songs\nA - Add new song\nC - Complete a song\nQ - Quit")
         choice = input(">>> ").strip().lower()
         if choice == 'd':
-            display_songs(songs)
+            display_songs(collection)
         elif choice == 'a':
-            add_song(songs)
+            add_song(collection)
         elif choice == 'c':
-            mark_learned(songs)
+            mark_learned(collection)
         elif choice == 'q':
-            save_songs(songs)
+            collection.save_songs(FILENAME)
             print("Make some music!")
             break
         else:
             print("Invalid menu choice")
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
