@@ -40,7 +40,7 @@ class SongListApp(App):
         self.collection.save_songs(FILENAME)
 
     def load_songs(self):
-        """Load songs and create buttons."""
+        """Load songs and create buttons (called only at startup)."""
         self.collection.load_songs(FILENAME)
         self.collection.sort(self.current_sort_key)
         song_box = self.root.ids.song_box
@@ -83,13 +83,13 @@ class SongListApp(App):
         self.update_status()
 
     def add_song(self):
-        """Add a new song from input fields."""
+        """Add a new song from input fields and save it."""
         title = self.root.ids.title_input.text.strip()
         artist = self.root.ids.artist_input.text.strip()
         year_text = self.root.ids.year_input.text.strip()
 
         if not all([title, artist, year_text]):
-            self.status_bottom = "Complete all the fields"
+            self.status_bottom = "Complete all the SNIPPETfields."
             return
 
         try:
@@ -104,6 +104,7 @@ class SongListApp(App):
         new_song = Song(title, artist, year, False)
         self.collection.add_song(new_song)
         self.add_song_button(new_song)
+        self.collection.save_songs(FILENAME)  # Save to file immediately
         self.clear_inputs()
         self.status_bottom = f"Added {title}"
         self.update_status()
@@ -118,7 +119,11 @@ class SongListApp(App):
     def sort_songs(self, sort_key):
         """Sort songs by the selected key."""
         self.current_sort_key = sort_key
-        self.load_songs()
+        self.collection.sort(self.current_sort_key)
+        song_box = self.root.ids.song_box
+        song_box.clear_widgets()
+        for song in self.collection.songs:
+            self.add_song_button(song)
 
 if __name__ == '__main__':
     SongListApp().run()
