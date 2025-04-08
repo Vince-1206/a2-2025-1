@@ -27,9 +27,10 @@ class SongListApp(App):
 
     def build(self):
         """Build the app and load songs."""
+        root = super().build()
         self.load_songs()
         self.update_status()
-        return super().build()
+        return root
 
     def on_stop(self):
         """Save songs when the app closes."""
