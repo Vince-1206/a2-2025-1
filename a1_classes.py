@@ -29,27 +29,29 @@ def add_song(collection):
     print(f"{title} by {artist} ({year}) added to song list.")
 
 
-
 def mark_learned(collection):
-    """Mark a song as learned."""
+    """Mark a song as learned based on displayed order."""
     if collection.get_number_of_unlearned_songs() == 0:
         print("No more songs to learn!")
         return
+
+    # Get the same sorted list as display_songs
+    sorted_songs = sorted(collection.songs, key=lambda song: (song.is_learned, song.title))
     display_songs(collection)
+
     while True:
         try:
             song_number = int(input("Enter the number of a song to mark as learned: "))
-            if song_number <= 0 or song_number > len(collection.songs):
+            if song_number <= 0 or song_number > len(sorted_songs):
                 print("Invalid song number")
-            elif collection.songs[song_number - 1].is_learned:
-                print(f"You have already learned {collection.songs[song_number - 1].title}")
+            elif sorted_songs[song_number - 1].is_learned:
+                print(f"You have already learned {sorted_songs[song_number - 1].title}")
             else:
-                collection.songs[song_number - 1].mark_learned()
-                print(f"{collection.songs[song_number - 1].title} learned!")
+                sorted_songs[song_number - 1].mark_learned()
+                print(f"{sorted_songs[song_number - 1].title} by {sorted_songs[song_number - 1].artist} learned")
                 break
         except ValueError:
             print("Invalid input; enter a valid number.")
-
 def get_valid_string(prompt):
     """Get a non-empty string input."""
     while True:
