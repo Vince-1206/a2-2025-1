@@ -49,5 +49,4 @@ class SongCollection:
         elif key == "year":
             self.songs.sort(key=lambda song: song.year)
         elif key == "learned":
-            # Sort by is_learned (False first) and then by title within each group
             self.songs.sort(key=lambda song: (song.is_learned, song.title))
