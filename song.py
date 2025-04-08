@@ -9,20 +9,14 @@ class Song:
         self.is_learned = is_learned
 
     def mark_learned(self):
-        self.is_learned = True
-
-    def mark_unlearned(self):
-        self.is_learned = False
-
-    def __str__(self):
-        """Return a string representation of the song."""
-        learned_status = "learned" if self.is_learned else "unlearned"
-        return f"{self.title} by {self.artist} ({self.year}) - {learned_status}"
-
-    def mark_learned(self):
         """Mark the song as learned."""
         self.is_learned = True
 
     def mark_unlearned(self):
         """Mark the song as unlearned."""
         self.is_learned = False
+
+    def __str__(self):
+        """Return a string representation of the song."""
+        learned_status = "learned" if self.is_learned else "unlearned"
+        return f"{self.title} by {self.artist} ({self.year}) - {learned_status}"

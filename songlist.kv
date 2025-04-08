@@ -11,7 +11,7 @@ BoxLayout:
         Spinner:
             id: sort_spinner
             values: ["title", "artist", "year", "learned"]  # Add "learned"
-            on_text: app.sort_songs(self.text)
+            on_text: app.sort_songs("learned")
         Label:
             text: "Add New Song"
         TextInput:
