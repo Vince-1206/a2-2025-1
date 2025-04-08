@@ -6,6 +6,7 @@ using Song and SongCollection classes.
 GitHub URL: https://github.com/Vince-1206/a2-2025-1/tree/main
 """
 from kivy.app import App
+from kivy.lang import Builder
 from kivy.uix.button import Button
 from kivy.properties import StringProperty
 from song import Song
@@ -27,10 +28,10 @@ class SongListApp(App):
 
     def build(self):
         """Build the app and load songs."""
-        root = super().build()
+        self.root = Builder.load_file('songlist.kv')
         self.load_songs()
         self.update_status()
-        return root
+        return self.root
 
     def on_stop(self):
         """Save songs when the app closes."""
