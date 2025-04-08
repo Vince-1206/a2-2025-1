@@ -56,8 +56,8 @@ class SongListApp(App):
             text=f"{song.title} by {song.artist} ({song.year}){learned_text}",
             background_color=LEARNED_COLOR if song.is_learned else UNLEARNED_COLOR,
             on_press=lambda x: self.toggle_song(song),
-            size_hint_y=None,
-            height=40,
+            size_hint=(1, None),
+            height=50,
             font_size=25  # Increase font size for better readability
         )
         self.root.ids.song_box.add_widget(button)
