@@ -1,4 +1,6 @@
 
+#:kivy 2.3.1
+
 BoxLayout:
     orientation: 'horizontal'
     BoxLayout:
@@ -44,6 +46,7 @@ BoxLayout:
                 orientation: 'vertical'
                 size_hint_y: None
                 height: self.minimum_height
+                spacing: 2  # Add spacing between buttons
         Label:
             text: app.status_bottom
             size_hint_y: 0.1

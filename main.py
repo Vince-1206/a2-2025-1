@@ -28,6 +28,7 @@ class SongListApp(App):
 
     def build(self):
         """Build the app and load songs."""
+        self.title = "Song List 2.0 by Lindsay Ward"  # Set window title
         self.root = Builder.load_file('songlist.kv')
         self.load_songs()
         self.update_status()
@@ -40,6 +41,8 @@ class SongListApp(App):
     def load_songs(self):
         """Load songs and create buttons."""
         self.collection.load_songs(FILENAME)
+        # Sort songs by title initially
+        self.collection.sort("title")
         song_box = self.root.ids.song_box
         song_box.clear_widgets()
         for song in self.collection.songs:
@@ -47,10 +50,14 @@ class SongListApp(App):
 
     def add_song_button(self, song):
         """Add a button for a song."""
+        # Add "(learned)" if the song is learned
+        learned_text = " (learned)" if song.is_learned else ""
         button = Button(
-            text=f"{song.title} - {song.artist} ({song.year})",
+            text=f"{song.title} by {song.artist} ({song.year}){learned_text}",
             background_color=LEARNED_COLOR if song.is_learned else UNLEARNED_COLOR,
-            on_press=lambda x: self.toggle_song(song)
+            on_press=lambda x: self.toggle_song(song),
+            size_hint_y=None,  # Allow dynamic height
+            height=40  # Consistent button height
         )
         self.root.ids.song_box.add_widget(button)
 
@@ -67,7 +74,7 @@ class SongListApp(App):
         else:
             song.mark_learned()
             self.status_bottom = f"Learned {song.title}"
-        self.load_songs()  # Refresh buttons
+        self.load_songs()
         self.update_status()
 
     def add_song(self):
