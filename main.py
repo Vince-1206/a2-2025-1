@@ -58,23 +58,28 @@ class SongListApp(App):
             height=50,
             font_size=20
         )
-        button.bind(on_press=lambda instance: self.toggle_song(song))
+        # Bind the button to toggle_song, passing both the song and the button instance
+        button.bind(on_press=lambda instance: self.toggle_song(song, instance))
         self.root.ids.song_box.add_widget(button)
+        return button  # Return the button for potential future use
 
     def update_status(self):
         """Update the top status label."""
         self.status_top = (f"To learn: {self.collection.get_number_of_unlearned_songs()}\n"
                           f"Learned: {self.collection.get_number_of_learned_songs()}")
 
-    def toggle_song(self, song):
-        """Toggle a song's learned status."""
+    def toggle_song(self, song, button):
+        """Toggle a song's learned status and update the button."""
         if song.is_learned:
             song.mark_unlearned()
+            button.background_color = UNLEARNED_COLOR
+            button.text = f"{song.title} by {song.artist} ({song.year})"
             self.status_bottom = f"Unlearned {song.title}"
         else:
             song.mark_learned()
+            button.background_color = LEARNED_COLOR
+            button.text = f"{song.title} by {song.artist} ({song.year}) (learned)"
             self.status_bottom = f"Learned {song.title}"
-        self.load_songs()  # Reload to reflect new status and sorting
         self.update_status()
 
     def add_song(self):
