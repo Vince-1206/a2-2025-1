@@ -1,37 +1,42 @@
-"""(Incomplete) Tests for SongCollection class."""
+"""Tests for SongCollection class."""
 from song import Song
 from songcollection import SongCollection
 
-
 def run_tests():
     """Test SongCollection class."""
-
-    # Test empty SongCollection (defaults)
+    # Test empty SongCollection
     print("Test empty SongCollection:")
     song_collection = SongCollection()
     print(song_collection)
-    assert not song_collection.songs  # an empty list is considered False
+    assert not song_collection.songs
 
-    # Test loading songs
-    print("Test loading songs:")
-    song_collection.load_songs('songs.json')
-    print(song_collection)
-    assert song_collection.songs  # assuming file is non-empty, non-empty list is considered True
-
-    # Test adding a new Song with values
+    # Test adding a new song
     print("Test adding new song:")
     song_collection.add_song(Song("My Happiness", "Powderfinger", 1996, True))
     print(song_collection)
+    assert len(song_collection.songs) == 1
+
+    # Test loading songs (create a test JSON file first)
+    print("Test loading songs:")
+    with open("test_songs.json", "w") as f:
+        json.dump([{"title": "Song A", "artist": "Artist A", "year": 2000, "is_learned": False}], f)
+    song_collection.load_songs("test_songs.json")
+    print(song_collection)
+    assert song_collection.songs
 
     # Test sorting songs
     print("Test sorting - year:")
+    song_collection.add_song(Song("Song B", "Artist B", 1990, False))
     song_collection.sort("year")
     print(song_collection)
-    # TODO: Add more sorting tests
+    assert song_collection.songs[0].year == 1990
 
-    # TODO: Test saving songs (check file manually to see results)
+    # Test learned/unlearned counts
+    print("Test learned/unlearned counts:")
+    assert song_collection.get_number_of_learned_songs() == 1
+    assert song_collection.get_number_of_unlearned_songs() == 2
 
-    # TODO: Add more tests, as appropriate, for each method
+    print("All SongCollection tests passed!")
 
-
-run_tests()
+if __name__ == "__main__":
+    run_tests()

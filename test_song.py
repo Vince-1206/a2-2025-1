@@ -15,10 +15,24 @@ def run_tests():
     assert default_song.is_learned is False
 
     # Test initial-value song
+    print("Test initial-value song:")
     initial_song = Song("My Happiness", "Powderfinger", 1996, True)
-    # TODO: Write tests to show this initialisation works
+    print(initial_song)
+    assert initial_song.title == "My Happiness"
+    assert initial_song.artist == "Powderfinger"
+    assert initial_song.year == 1996
+    assert initial_song.is_learned is True
 
-    # TODO: Add more tests, as appropriate, for each method
+    # Test marking learned/unlearned
+    print("Test marking learned/unlearned:")
+    test_song = Song("Test Song", "Test Artist", 2020, False)
+    test_song.mark_learned()
+    assert test_song.is_learned is True
+    test_song.mark_unlearned()
+    assert test_song.is_learned is False
+
+    print("All Song tests passed!")
 
 
-run_tests()
+if __name__ == "__main__":
+    run_tests()
