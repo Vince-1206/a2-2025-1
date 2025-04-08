@@ -11,17 +11,9 @@ from songcollection import SongCollection
 FILENAME = "songs.json"
 
 def display_songs(collection):
-    desired_order = [
-        "Amazing Grace",
-        "Boom Boom Pow",
-        "Heartbreak Hotel",
-        "I Want to Hold Your Hand",
-        "Macarena",
-        "My Sharona"
-    ]
-    # Sort songs based on their index in desired_order
-    collection.songs.sort(key=lambda song: desired_order.index(song.title))
-    for i, song in enumerate(collection.songs, 1):
+    """Display all songs with unlearned songs first, then learned, both sorted by title."""
+    sorted_songs = sorted(collection.songs, key=lambda song: (song.is_learned, song.title))
+    for i, song in enumerate(sorted_songs, 1):
         status = "* " if not song.is_learned else "  "
         print(f"{i}. {status}{song.title} - {song.artist} ({song.year})")
     print(f"{collection.get_number_of_learned_songs()} songs learned, "
