@@ -8,6 +8,12 @@ class Song:
         self.year = year
         self.is_learned = is_learned
 
+    def mark_learned(self):
+        self.is_learned = True
+
+    def mark_unlearned(self):
+        self.is_learned = False
+
     def __str__(self):
         """Return a string representation of the song."""
         learned_status = "learned" if self.is_learned else "unlearned"

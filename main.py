@@ -42,8 +42,10 @@ class SongListApp(App):
     def load_songs(self):
         """Load songs and create buttons."""
         self.collection.load_songs(FILENAME)
-        # Sort by title initially unless in learn mode
-        if not self.is_learn_mode:
+        # Sort by title initially, or by learned if in learn mode
+        if self.is_learn_mode:
+            self.collection.sort("learned")
+        else:
             self.collection.sort("title")
         song_box = self.root.ids.song_box
         song_box.clear_widgets()
@@ -56,40 +58,28 @@ class SongListApp(App):
         button = Button(
             text=f"{song.title} by {song.artist} ({song.year}){learned_text}",
             background_color=LEARNED_COLOR if song.is_learned else UNLEARNED_COLOR,
-            on_press=self.handle_song_click(song),  # Use a method to handle clicks
+            on_press=lambda instance: self.toggle_song(song),  # Simplified on_press
             size_hint=(1, None),
             height=50,
             font_size=20
         )
         self.root.ids.song_box.add_widget(button)
 
-    def handle_song_click(self, song):
-        """Return a function to handle song button clicks based on mode."""
-        def on_press(instance):
-            if self.is_learn_mode:
-                # Toggle the song's learned status
-                if song.is_learned:
-                    song.mark_unlearned()
-                    self.status_bottom = f"Unlearned {song.title}"
-                else:
-                    song.mark_learned()
-                    self.status_bottom = f"Learned {song.title}"
-            else:
-                # Toggle as before (for consistency, even if not in learn mode)
-                if song.is_learned:
-                    song.mark_unlearned()
-                    self.status_bottom = f"Unlearned {song.title}"
-                else:
-                    song.mark_learned()
-                    self.status_bottom = f"Learned {song.title}"
-            self.load_songs()
-            self.update_status()
-        return on_press
-
     def update_status(self):
         """Update the top status label."""
         self.status_top = (f"To learn: {self.collection.get_number_of_unlearned_songs()}\n"
                           f"Learned: {self.collection.get_number_of_learned_songs()}")
+
+    def toggle_song(self, song):
+        """Toggle a song's learned status."""
+        if song.is_learned:
+            song.mark_unlearned()
+            self.status_bottom = f"Unlearned {song.title}"
+        else:
+            song.mark_learned()
+            self.status_bottom = f"Learned {song.title}"
+        self.load_songs()  # Reload to reflect new status and sorting
+        self.update_status()
 
     def add_song(self):
         """Add a new song from input fields."""
@@ -125,15 +115,9 @@ class SongListApp(App):
         self.status_bottom = ""
 
     def sort_songs(self, sort_key):
-        """Sort songs by the selected key or toggle learn mode."""
-        if sort_key == "learned":
-            self.is_learn_mode = True
-            # Optionally sort by learned status to show unlearned first
-            self.collection.sort("learned")
-        else:
-            self.is_learn_mode = False
-            self.collection.sort(sort_key)
-        self.load_songs()
+        """Sort songs by the selected key or set learn mode."""
+        self.is_learn_mode = (sort_key == "learned")
+        self.load_songs()  # Reload with appropriate sorting
 
 if __name__ == '__main__':
     SongListApp().run()
