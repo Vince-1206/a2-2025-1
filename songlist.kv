@@ -40,13 +40,15 @@ BoxLayout:
         Label:
             text: app.status_top
             size_hint_y: 0.1
+            font_size: 16  # Match button font size
         ScrollView:
             BoxLayout:
                 id: song_box
                 orientation: 'vertical'
                 size_hint_y: None
                 height: self.minimum_height
-                spacing: 2  # Add spacing between buttons
+                spacing: 2
         Label:
             text: app.status_bottom
             size_hint_y: 0.1
+            font_size: 16  # Match button font size
