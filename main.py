@@ -71,6 +71,7 @@ class SongListApp(App):
                           f"Learned: {self.collection.get_number_of_learned_songs()}")
 
     def toggle_song(self, song):
+        print(f"Toggling song: {song.title}, current status: {song.is_learned}")
         """Toggle a song's learned status."""
         if song.is_learned:
             song.mark_unlearned()
