@@ -68,14 +68,13 @@ class SongListApp(App):
 
     def toggle_song(self, song):
         """Toggle a song's learned status."""
-        print(f"Toggling song: {song.title}, current status: {song.is_learned}")
         if song.is_learned:
             song.mark_unlearned()
             self.status_bottom = f"Unlearned {song.title}"
         else:
             song.mark_learned()
             self.status_bottom = f"Learned {song.title}"
-        self.load_songs()
+        self.load_songs()  # Reload to reflect new status and sorting
         self.update_status()
 
     def add_song(self):

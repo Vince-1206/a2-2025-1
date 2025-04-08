@@ -1,4 +1,3 @@
-
 #:kivy 2.3.1
 
 BoxLayout:
@@ -10,8 +9,9 @@ BoxLayout:
             text: "Sort by:"
         Spinner:
             id: sort_spinner
-            values: ["title", "artist", "year", "learned"]  # Add "learned"
-            on_text: app.sort_songs("learned")
+            values: ["title", "artist", "year", "learned"]
+            text: "title"  # Default to title
+            on_text: app.sort_songs(self.text)
         Label:
             text: "Add New Song"
         TextInput:
