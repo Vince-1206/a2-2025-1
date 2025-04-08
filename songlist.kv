@@ -10,7 +10,7 @@ BoxLayout:
             text: "Sort by:"
         Spinner:
             id: sort_spinner
-            values: ["title", "artist", "year"]
+            values: ["title", "artist", "year", "learned"]  # Add "learned"
             on_text: app.sort_songs(self.text)
         Label:
             text: "Add New Song"
@@ -40,7 +40,7 @@ BoxLayout:
         Label:
             text: app.status_top
             size_hint_y: 0.1
-            font_size: 25  # Match button font size
+            font_size: 20
         ScrollView:
             BoxLayout:
                 id: song_box
@@ -48,8 +48,8 @@ BoxLayout:
                 size_hint_y: None
                 height: self.minimum_height
                 spacing: 2
-                padding: 5
+                padding: 20
         Label:
             text: app.status_bottom
             size_hint_y: 0.1
-            font_size: 25  # Match button font size
+            font_size: 20

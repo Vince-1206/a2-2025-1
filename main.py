@@ -58,7 +58,7 @@ class SongListApp(App):
             on_press=lambda x: self.toggle_song(song),
             size_hint=(1, None),
             height=50,
-            font_size=25  # Increase font size for better readability
+            font_size=20  # Increase font size for better readability
         )
         self.root.ids.song_box.add_widget(button)
 
